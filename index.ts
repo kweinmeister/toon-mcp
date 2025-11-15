@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+import { realpathSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { decode, encode } from "@toon-format/toon";
@@ -107,7 +108,9 @@ server.addTool({
 	execute: decodeToolExecute,
 });
 
-const isMain = process.argv[1] === fileURLToPath(import.meta.url);
+const isMain =
+	process.argv[1] === fileURLToPath(import.meta.url) ||
+	realpathSync(process.argv[1]) === fileURLToPath(import.meta.url);
 
 if (isMain) {
 	const { values } = parseArgs({
