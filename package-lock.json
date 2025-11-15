@@ -8,7 +8,6 @@
 			"name": "toon-mcp",
 			"version": "1.0.0",
 			"dependencies": {
-				"@modelcontextprotocol/sdk": "1.17.2",
 				"@toon-format/toon": "^1.0.0",
 				"fastmcp": "^3.23.0",
 				"tsx": "^4.20.6",
