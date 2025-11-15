@@ -1,5 +1,6 @@
 import { fileURLToPath } from "node:url";
-import { type Delimiter, decode, encode } from "@toon-format/toon";
+import { parseArgs } from "node:util";
+import { decode, encode } from "@toon-format/toon";
 import { FastMCP } from "fastmcp";
 import { z } from "zod";
 
@@ -30,6 +31,7 @@ export const encodeParameters = z.object({
 	flattenDepth: z
 		.number()
 		.optional()
+		.default(Infinity)
 		.describe("Maximum depth for key folding."),
 });
 
@@ -46,7 +48,7 @@ export const encodeToolExecute = async (
 
 		const result = encode(data, {
 			indent: args.indent,
-			delimiter: args.delimiter as Delimiter,
+			delimiter: args.delimiter,
 			keyFolding: args.keyFolding,
 			flattenDepth: args.flattenDepth,
 		});
@@ -103,24 +105,16 @@ server.addTool({
 const isMain = process.argv[1] === fileURLToPath(import.meta.url);
 
 if (isMain) {
-	const args = process.argv.slice(2);
-	let transportArg = "stdio";
-	let portArg: string | undefined;
+	const { values } = parseArgs({
+		args: process.argv.slice(2),
+		options: {
+			transport: { type: "string", default: "stdio" },
+			port: { type: "string" },
+		},
+	});
 
-	for (let i = 0; i < args.length; i++) {
-		switch (args[i]) {
-			case "--transport":
-				if (i + 1 < args.length && !args[i + 1].startsWith("--")) {
-					transportArg = args[++i];
-				}
-				break;
-			case "--port":
-				if (i + 1 < args.length && !args[i + 1].startsWith("--")) {
-					portArg = args[++i];
-				}
-				break;
-		}
-	}
+	const transportArg = values.transport;
+	const portArg = values.port;
 
 	if (transportArg === "http-stream" || transportArg === "httpStream") {
 		const port = portArg

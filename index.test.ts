@@ -1,5 +1,24 @@
-import { describe, expect, it } from "vitest";
-import { decodeToolExecute, encodeToolExecute, server } from "./index.js";
+import { describe, expect, it, vi } from "vitest";
+import {
+	decodeParameters,
+	decodeToolExecute,
+	encodeParameters,
+	encodeToolExecute,
+	server,
+} from "./index.js";
+
+vi.mock("@toon-format/toon", async (importOriginal) => {
+	const mod = await importOriginal<typeof import("@toon-format/toon")>();
+	return {
+		...mod,
+		decode: vi.fn((input, options) => {
+			if (input === "::: invalid toon :::") {
+				throw new Error("Mocked decode error");
+			}
+			return mod.decode(input, options);
+		}),
+	};
+});
 
 describe("TOON MCP Server", () => {
 	it("should have tools registered", async () => {
@@ -9,35 +28,34 @@ describe("TOON MCP Server", () => {
 	describe("encode_toon", () => {
 		it("should encode valid JSON string", async () => {
 			const input = JSON.stringify({ a: 1, b: 2 });
-			const result = await encodeToolExecute({
-				json: input,
-				indent: 2,
-				delimiter: ",",
-				keyFolding: "off",
-			});
+			const result = await encodeToolExecute(
+				encodeParameters.parse({
+					json: input,
+				}),
+			);
 			expect(result).toBeDefined();
 			expect(typeof result).toBe("string");
 			expect(result).not.toContain("Error:");
 		});
 
 		it("should return error for invalid JSON", async () => {
-			const result = await encodeToolExecute({
-				json: "{ invalid json }",
-				indent: 2,
-				delimiter: ",",
-				keyFolding: "off",
-			});
+			const result = await encodeToolExecute(
+				encodeParameters.parse({
+					json: "{ invalid json }",
+				}),
+			);
 			expect(result).toContain("Error: Invalid JSON input");
 		});
 
 		it("should handle options", async () => {
 			const input = JSON.stringify([1, 2, 3]);
-			const result = await encodeToolExecute({
-				json: input,
-				indent: 4,
-				delimiter: "|",
-				keyFolding: "off",
-			});
+			const result = await encodeToolExecute(
+				encodeParameters.parse({
+					json: input,
+					indent: 4,
+					delimiter: "|",
+				}),
+			);
 			expect(result).toBeDefined();
 			expect(result).not.toContain("Error:");
 		});
@@ -46,22 +64,21 @@ describe("TOON MCP Server", () => {
 	describe("decode_toon", () => {
 		it("should decode valid TOON string", async () => {
 			const original = { a: 1, b: 2 };
-			const toon = await encodeToolExecute({
-				json: JSON.stringify(original),
-				indent: 2,
-				delimiter: ",",
-				keyFolding: "off",
-			});
+			const toon = await encodeToolExecute(
+				encodeParameters.parse({
+					json: JSON.stringify(original),
+				}),
+			);
 
 			if (typeof toon !== "string" || toon.startsWith("Error")) {
 				throw new Error(`Encoding failed during setup: ${toon}`);
 			}
 
-			const result = await decodeToolExecute({
-				toon: toon,
-				strict: true,
-				expandPaths: "off",
-			});
+			const result = await decodeToolExecute(
+				decodeParameters.parse({
+					toon: toon,
+				}),
+			);
 
 			expect(result).not.toContain("Error:");
 			const decoded = JSON.parse(result as string);
@@ -69,14 +86,12 @@ describe("TOON MCP Server", () => {
 		});
 
 		it("should return error for invalid TOON", async () => {
-			const result = await decodeToolExecute({
-				toon: "::: invalid toon :::",
-				strict: true,
-				expandPaths: "off",
-			});
-			if (result.startsWith("Error")) {
-				expect(result).toContain("Error decoding TOON");
-			}
+			const result = await decodeToolExecute(
+				decodeParameters.parse({
+					toon: "::: invalid toon :::",
+				}),
+			);
+			expect(result).toContain("Error decoding TOON");
 		});
 	});
 });
