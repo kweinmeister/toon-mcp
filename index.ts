@@ -12,6 +12,17 @@ export const server = new FastMCP({
 export const encodeParameters = z.object({
 	json: z
 		.string()
+		.transform((str, ctx) => {
+			try {
+				return JSON.parse(str);
+			} catch (e) {
+				ctx.addIssue({
+					code: "custom",
+					message: `Invalid JSON input: ${e instanceof Error ? e.message : String(e)}`,
+				});
+				return z.NEVER;
+			}
+		})
 		.describe("The JSON data (as a string) to encode into TOON format."),
 	indent: z
 		.number()
@@ -39,14 +50,7 @@ export const encodeToolExecute = async (
 	args: z.infer<typeof encodeParameters>,
 ) => {
 	try {
-		let data: unknown;
-		try {
-			data = JSON.parse(args.json);
-		} catch (e) {
-			return `Error: Invalid JSON input. ${e instanceof Error ? e.message : String(e)}`;
-		}
-
-		const result = encode(data, {
+		const result = encode(args.json, {
 			indent: args.indent,
 			delimiter: args.delimiter,
 			keyFolding: args.keyFolding,
