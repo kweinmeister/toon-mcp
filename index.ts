@@ -116,10 +116,15 @@ if (isMain) {
 	const transportArg = values.transport;
 	const portArg = values.port;
 
-	if (transportArg === "http-stream" || transportArg === "httpStream") {
-		const port = portArg
-			? parseInt(portArg, 10)
-			: parseInt(process.env.PORT ?? "8080", 10);
+	if (transportArg?.toLowerCase() === "http-stream") {
+		const portValue = portArg ?? process.env.PORT ?? "8080";
+		const port = parseInt(portValue, 10);
+
+		if (Number.isNaN(port)) {
+			console.error(`Error: Invalid port specified: '${portValue}'.`);
+			process.exit(1);
+		}
+
 		await server.start({
 			transportType: "httpStream",
 			httpStream: { port },

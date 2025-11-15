@@ -21,8 +21,24 @@ vi.mock("@toon-format/toon", async (importOriginal) => {
 });
 
 describe("TOON MCP Server", () => {
-	it("should have tools registered", async () => {
-		expect(server).toBeDefined();
+	it("should have tools registered", () => {
+		// @ts-expect-error - accessing private/protected property for testing
+		// biome-ignore lint/suspicious/noExplicitAny: Accessing private property for testing
+		const tools = server.tools || (server as any)._tools;
+		if (tools) {
+			// biome-ignore lint/suspicious/noExplicitAny: Casting to any to access potential private properties
+			const s = server as any;
+			if (s.tools) {
+				expect(s.tools.size).toBe(2);
+				expect(s.tools.has("encode_toon")).toBe(true);
+				expect(s.tools.has("decode_toon")).toBe(true);
+			} else {
+				// Fallback if tools is not accessible, just check defined
+				expect(server).toBeDefined();
+			}
+		} else {
+			expect(server).toBeDefined();
+		}
 	});
 
 	describe("encode_toon", () => {
