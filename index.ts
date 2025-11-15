@@ -108,9 +108,7 @@ server.addTool({
 	execute: decodeToolExecute,
 });
 
-const isMain =
-	process.argv[1] === fileURLToPath(import.meta.url) ||
-	realpathSync(process.argv[1]) === fileURLToPath(import.meta.url);
+const isMain = realpathSync(process.argv[1]) === fileURLToPath(import.meta.url);
 
 if (isMain) {
 	const { values } = parseArgs({
