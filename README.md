@@ -58,7 +58,7 @@ To use this server with the [Gemini CLI](https://www.npmjs.com/package/@google/g
     Start the CLI interface. The tools should now be available to the model.
 
     ```bash
-    gemini chat
+    gemini
     ```
 
 ## Tools
@@ -149,7 +149,7 @@ npm test
 You can use the [MCP Inspector](https://github.com/modelcontextprotocol/inspector) to inspect and test the server's tools interactively via a web interface.
 
 ```bash
-npx @modelcontextprotocol/inspector npx tsx index.ts
+npx fastmcp inspect index.ts
 ```
 
 ### Building & Linting
