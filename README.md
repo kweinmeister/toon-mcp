@@ -35,20 +35,7 @@ To use this server with the [Gemini CLI](https://www.npmjs.com/package/@google/g
       "mcpServers": {
         "toon": {
           "command": "npx",
-          "args": ["-y", "toon-mcp"]
-        }
-      }
-    }
-    ```
-
-    *Note: If you are running this from a local source checkout, use the absolute path to your project:*
-
-    ```json
-    {
-      "mcpServers": {
-        "toon": {
-          "command": "npx",
-          "args": ["tsx", "/ABSOLUTE/PATH/TO/toon-mcp/index.ts"]
+          "args": ["-y", "git+https://github.com/kweinmeister/toon-mcp.git"]
         }
       }
     }

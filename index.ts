@@ -1,3 +1,4 @@
+#!/usr/bin/env tsx
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { decode, encode } from "@toon-format/toon";

@@ -2,6 +2,9 @@
 	"name": "toon-mcp",
 	"version": "1.0.0",
 	"type": "module",
+	"bin": {
+		"toon-mcp": "./index.ts"
+	},
 	"scripts": {
 		"start": "tsx index.ts",
 		"start:http": "tsx index.ts --transport http-stream --port 8080",
