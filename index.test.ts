@@ -51,12 +51,13 @@ describe("TOON MCP Server", () => {
 			expect(result).not.toContain("Error:");
 		});
 
-		it("should throw on invalid JSON", () => {
-			expect(() =>
+		it("should return error on invalid JSON", async () => {
+			const result = await encodeToolExecute(
 				encodeParameters.parse({
 					json: "{ invalid json }",
 				}),
-			).toThrow();
+			);
+			expect(result).toContain("Error encoding TOON");
 		});
 
 		it("should handle options", async () => {
