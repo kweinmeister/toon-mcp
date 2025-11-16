@@ -39,13 +39,16 @@ describe("TOON MCP Server", () => {
 	});
 
 	describe("encode_toon", () => {
-		it("should encode valid JSON string", async () => {
+		it("should encode valid JSON string using defaults", async () => {
 			const input = JSON.stringify({ a: 1, b: 2 });
-			const result = await encodeToolExecute(
-				encodeParameters.parse({
-					json: input,
-				}),
-			);
+			// parameters parsed without explicit options should yield undefined for optional fields
+			const params = encodeParameters.parse({
+				json: input,
+			});
+			expect(params.indent).toBeUndefined();
+
+			const result = await encodeToolExecute(params);
+
 			expect(result).toBeDefined();
 			expect(typeof result).toBe("string");
 			expect(result).not.toContain("Error:");
@@ -60,7 +63,7 @@ describe("TOON MCP Server", () => {
 			expect(result).toContain("Error encoding TOON");
 		});
 
-		it("should handle options", async () => {
+		it("should handle explicit options", async () => {
 			const input = JSON.stringify([1, 2, 3]);
 			const result = await encodeToolExecute(
 				encodeParameters.parse({

@@ -18,23 +18,23 @@ export const encodeParameters = z.object({
 	indent: z
 		.number()
 		.optional()
-		.default(2)
-		.describe("Number of spaces for indentation."),
+		.describe("Number of spaces for indentation. Defaults to 2."),
 	delimiter: z
 		.enum([",", "\t", "|"])
 		.optional()
-		.default(",")
-		.describe("Delimiter for array values (comma, tab, or pipe)."),
+		.describe(
+			"Delimiter for array values (comma, tab, or pipe). Defaults to comma.",
+		),
 	keyFolding: z
 		.enum(["off", "safe"])
 		.optional()
-		.default("off")
-		.describe("Collapse single-key wrapper chains into dotted paths."),
+		.describe(
+			"Collapse single-key wrapper chains into dotted paths. Defaults to 'off'.",
+		),
 	flattenDepth: z
 		.number()
 		.optional()
-		.default(Infinity)
-		.describe("Maximum depth for key folding."),
+		.describe("Maximum depth for key folding. Defaults to Infinity."),
 });
 
 export const encodeToolExecute = async (
@@ -44,15 +44,17 @@ export const encodeToolExecute = async (
 		const jsonInput = JSON.parse(args.json);
 
 		const result = encode(jsonInput, {
-			indent: args.indent,
-			delimiter: args.delimiter,
-			keyFolding: args.keyFolding,
-			flattenDepth: args.flattenDepth,
+			indent: args.indent ?? 2,
+			delimiter: args.delimiter ?? ",",
+			keyFolding: args.keyFolding ?? "off",
+			flattenDepth: args.flattenDepth ?? Infinity,
 		});
 
 		return result;
 	} catch (error) {
-		return `Error encoding TOON: ${error instanceof Error ? error.message : String(error)}`;
+		return `Error encoding TOON: ${
+			error instanceof Error ? error.message : String(error)
+		}`;
 	}
 };
 
@@ -68,13 +70,15 @@ export const decodeParameters = z.object({
 	strict: z
 		.boolean()
 		.optional()
-		.default(true)
-		.describe("Enforce strict validation (e.g. array lengths)."),
+		.describe(
+			"Enforce strict validation (e.g. array lengths). Defaults to true.",
+		),
 	expandPaths: z
 		.enum(["off", "safe"])
 		.optional()
-		.default("off")
-		.describe("Reconstruct dotted keys into nested objects."),
+		.describe(
+			"Reconstruct dotted keys into nested objects. Defaults to 'off'.",
+		),
 });
 
 export const decodeToolExecute = async (
@@ -82,13 +86,15 @@ export const decodeToolExecute = async (
 ) => {
 	try {
 		const result = decode(args.toon, {
-			strict: args.strict,
-			expandPaths: args.expandPaths,
+			strict: args.strict ?? true,
+			expandPaths: args.expandPaths ?? "off",
 		});
 
 		return JSON.stringify(result, null, 2);
 	} catch (error) {
-		return `Error decoding TOON: ${error instanceof Error ? error.message : String(error)}`;
+		return `Error decoding TOON: ${
+			error instanceof Error ? error.message : String(error)
+		}`;
 	}
 };
 
