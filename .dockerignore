@@ -8,3 +8,5 @@ coverage
 .DS_Store
 README.md
 LICENSE
+Dockerfile
+.dockerignore
