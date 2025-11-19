@@ -89,28 +89,26 @@ Parses TOON formatted text back into standard JSON.
 
 ## Transports
 
-This server supports both Standard IO (stdio) and HTTP Server-Sent Events (SSE).
+This server supports both HTTP Server-Sent Events (SSE) and Standard IO (stdio).
 
-### Stdio (Default)
+### HTTP / SSE (Default)
+
+Useful for remote deployments (like Cloud Run) or web-based MCP clients.
+
+```bash
+# Starts on port 8080 by default
+npm start
+
+# Custom port
+npm start -- --port 3000
+```
+
+### Stdio
 
 Used by local clients like Gemini CLI.
 
 ```bash
-npm start
-# or
-npx tsx index.ts
-```
-
-### HTTP / SSE
-
-Useful for remote deployments or web-based MCP clients.
-
-```bash
-# Starts on port 8080 by default
-npm run start:http
-
-# Custom port
-npx tsx index.ts --transport http-stream --port 3000
+npm run start:stdio
 ```
 
 ## Development

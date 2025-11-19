@@ -6,8 +6,8 @@
 		"toon-mcp": "./index.ts"
 	},
 	"scripts": {
-		"start": "tsx index.ts",
-		"start:http": "tsx index.ts --transport http-stream --port 8080",
+		"start": "tsx index.ts --transport http-stream",
+		"start:stdio": "tsx index.ts",
 		"test": "vitest"
 	},
 	"dependencies": {
