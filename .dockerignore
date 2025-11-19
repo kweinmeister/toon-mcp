@@ -1,0 +1,12 @@
+node_modules
+.git
+.github
+.gitignore
+dist
+coverage
+*.log
+.DS_Store
+README.md
+LICENSE
+Dockerfile
+.dockerignore
