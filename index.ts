@@ -130,7 +130,7 @@ if (isMain) {
 
 		await server.start({
 			transportType: "httpStream",
-			httpStream: { port },
+			httpStream: { port, host: "0.0.0.0" },
 		});
 	} else {
 		await server.start({ transportType: "stdio" });
