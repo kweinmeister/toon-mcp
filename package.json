@@ -13,7 +13,7 @@
 	"dependencies": {
 		"@modelcontextprotocol/sdk": "1.22.0",
 		"@toon-format/toon": "^1.0.0",
-		"fastmcp": "^3.23.0",
+		"fastmcp": "^3.23.1",
 		"tsx": "^4.20.6",
 		"zod": "^4.1.13"
 	},
