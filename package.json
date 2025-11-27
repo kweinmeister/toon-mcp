@@ -11,7 +11,7 @@
 		"test": "vitest"
 	},
 	"dependencies": {
-		"@modelcontextprotocol/sdk": "1.17.2",
+		"@modelcontextprotocol/sdk": "1.22.0",
 		"@toon-format/toon": "^1.0.0",
 		"fastmcp": "^3.23.0",
 		"tsx": "^4.20.6",
