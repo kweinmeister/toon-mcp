@@ -112,10 +112,9 @@ export const decodeToolExecute = async (
 		const result = decode(args.toon, {
 			strict: args.strict ?? true,
 			expandPaths: args.expandPaths ?? "off",
-			indent: args.indent,
 		});
 
-		return JSON.stringify(result, null, 2);
+		return JSON.stringify(result, null, args.indent ?? 2);
 	} catch (error) {
 		return `Error decoding TOON: ${
 			error instanceof Error ? error.message : String(error)

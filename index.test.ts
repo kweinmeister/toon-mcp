@@ -139,16 +139,15 @@ describe("TOON MCP Server", () => {
 			expect(result).toContain("Error decoding TOON");
 		});
 
-		it("should accept indent parameter without error", async () => {
+		it("should apply indentation to the output JSON", async () => {
 			const result = await decodeToolExecute(
 				decodeParameters.parse({
 					toon: "a: 1",
 					indent: 4,
 				}),
 			);
-			expect(result).not.toContain("Error:");
-			const decoded = JSON.parse(result as string);
-			expect(decoded).toEqual({ a: 1 });
+			const expectedJson = JSON.stringify({ a: 1 }, null, 4);
+			expect(result).toBe(expectedJson);
 		});
 	});
 });
