@@ -52,15 +52,14 @@ export const encodeToolExecute = async (
 		let replacer: EncodeReplacer | undefined;
 
 		if (args.replacer) {
-			const allowList = args.replacer;
+			const allowList = new Set(args.replacer);
 			replacer = (key, value, path) => {
 				if (path.length === 0) return value;
-				const parentKey = path[path.length - 1];
+				const currentKeyInPath = path[path.length - 1];
 				// Keep array items (identified by number key in path)
-				if (typeof parentKey === "number") return value;
+				if (typeof currentKeyInPath === "number") return value;
 				// Filter object keys based on whitelist
-				if (allowList.includes(key) || allowList.includes(Number(key)))
-					return value;
+				if (allowList.has(key) || allowList.has(Number(key))) return value;
 				return undefined;
 			};
 		}
