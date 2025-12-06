@@ -2,7 +2,7 @@
 import { realpathSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
-import { decode, encode } from "@toon-format/toon";
+import { decode, type EncodeReplacer, encode } from "@toon-format/toon";
 import { FastMCP } from "fastmcp";
 import { z } from "zod";
 
@@ -35,6 +35,12 @@ export const encodeParameters = z.object({
 		.number()
 		.optional()
 		.describe("Maximum depth for key folding. Defaults to Infinity."),
+	replacer: z
+		.array(z.union([z.string(), z.number()]))
+		.optional()
+		.describe(
+			"Array of properties to include in the output. If not provided, all properties are included.",
+		),
 });
 
 export const encodeToolExecute = async (
@@ -43,11 +49,28 @@ export const encodeToolExecute = async (
 	try {
 		const jsonInput = JSON.parse(args.json);
 
+		let replacer: EncodeReplacer | undefined;
+
+		if (args.replacer) {
+			const allowList = args.replacer;
+			replacer = (key, value, path) => {
+				if (path.length === 0) return value;
+				const parentKey = path[path.length - 1];
+				// Keep array items (identified by number key in path)
+				if (typeof parentKey === "number") return value;
+				// Filter object keys based on whitelist
+				if (allowList.includes(key) || allowList.includes(Number(key)))
+					return value;
+				return undefined;
+			};
+		}
+
 		const result = encode(jsonInput, {
 			indent: args.indent ?? 2,
 			delimiter: args.delimiter ?? ",",
 			keyFolding: args.keyFolding ?? "off",
 			flattenDepth: args.flattenDepth ?? Infinity,
+			replacer,
 		});
 
 		return result;
@@ -79,6 +102,7 @@ export const decodeParameters = z.object({
 		.describe(
 			"Reconstruct dotted keys into nested objects. Defaults to 'off'.",
 		),
+	indent: z.number().optional().describe("Number of spaces for indentation."),
 });
 
 export const decodeToolExecute = async (
@@ -88,6 +112,7 @@ export const decodeToolExecute = async (
 		const result = decode(args.toon, {
 			strict: args.strict ?? true,
 			expandPaths: args.expandPaths ?? "off",
+			indent: args.indent,
 		});
 
 		return JSON.stringify(result, null, 2);
