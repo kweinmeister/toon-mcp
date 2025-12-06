@@ -75,6 +75,35 @@ describe("TOON MCP Server", () => {
 			expect(result).toBeDefined();
 			expect(result).not.toContain("Error:");
 		});
+
+		it("should use replacer to filter filtered properties", async () => {
+			const input = JSON.stringify({ keep: 1, drop: 2 });
+			const result = await encodeToolExecute(
+				encodeParameters.parse({
+					json: input,
+					replacer: ["keep"],
+				}),
+			);
+			expect(result).not.toContain("drop: 2");
+		});
+
+		it("should preserve array items when using replacer", async () => {
+			const input = JSON.stringify({ list: [1, 2], other: 3 });
+			const result = await encodeToolExecute(
+				encodeParameters.parse({
+					json: input,
+					replacer: ["list"],
+				}),
+			);
+			// Should contain "list" and its items
+			expect(result).toContain("list");
+			// Since TOON format is compact, exact match might be tricky, but we can check if data is present
+			// 1 and 2 should be present
+			expect(result).toContain("1");
+			expect(result).toContain("2");
+			// Should NOT contain "other"
+			expect(result).not.toContain("other: 3");
+		});
 	});
 
 	describe("decode_toon", () => {
@@ -108,6 +137,17 @@ describe("TOON MCP Server", () => {
 				}),
 			);
 			expect(result).toContain("Error decoding TOON");
+		});
+
+		it("should apply indentation to the output JSON", async () => {
+			const result = await decodeToolExecute(
+				decodeParameters.parse({
+					toon: "a: 1",
+					indent: 4,
+				}),
+			);
+			const expectedJson = JSON.stringify({ a: 1 }, null, 4);
+			expect(result).toBe(expectedJson);
 		});
 	});
 });

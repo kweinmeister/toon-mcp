@@ -63,6 +63,7 @@ Converts JSON data into the compact TOON format.
 | `delimiter` | `string` | `,` | Delimiter for arrays/rows. Options: `,` (comma), `\t` (tab), `\|` (pipe). |
 | `keyFolding` | `string` | `"off"` | Collapse single-key wrapper chains (e.g., `a.b.c`). Options: `"off"`, `"safe"`. |
 | `flattenDepth` | `number` | `Infinity` | Maximum depth to apply key folding. |
+| `replacer` | `(string\|number)[]` | `undefined` | Array of properties to include in the output. |
 
 **Example Prompt in Gemini CLI:**
 > "Use the encode_toon tool to convert this JSON into TOON format: `{"users": [{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]}`"
@@ -86,6 +87,7 @@ Parses TOON formatted text back into standard JSON.
 | `toon` | `string` | **Required** | The TOON formatted string to decode. |
 | `strict` | `boolean` | `true` | Enforce strict validation (e.g., checking declared array lengths). |
 | `expandPaths` | `string` | `"off"` | Reconstruct dotted keys into nested objects. Options: `"off"`, `"safe"`. |
+| `indent` | `number` | `2` | Number of spaces for indentation. |
 
 ## Transports
 
