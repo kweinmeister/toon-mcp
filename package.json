@@ -19,7 +19,7 @@
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.3.12",
+		"@biomejs/biome": "2.4.4",
 		"@types/node": "^25.0.9",
 		"@vitest/coverage-v8": "^4.0.18",
 		"typescript": "^5.9.3",
