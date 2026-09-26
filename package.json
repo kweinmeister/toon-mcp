@@ -16,7 +16,7 @@
 		"@toon-format/toon": "^4.1.1",
 		"fastmcp": "^4.20.6",
 		"tsx": "^4.23.13",
-		"zod": "^4.5.4"
+		"zod": "^4.6.5"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.14",
