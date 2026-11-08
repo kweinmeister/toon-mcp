@@ -10,8 +10,8 @@ TOON is a compact, human-readable format designed to represent JSON data using s
 
 This server exposes two core tools to MCP clients (specifically tested with Gemini CLI):
 
-* **`encode_toon`**: Converts JSON strings into TOON format to save tokens.
-* **`decode_toon`**: Converts TOON formatted text back into standard JSON.
+- **`encode_toon`**: Converts JSON strings into TOON format to save tokens.
+- **`decode_toon`**: Converts TOON formatted text back into standard JSON.
 
 ## Usage
 
@@ -21,32 +21,32 @@ To use this server with the [Gemini CLI](https://www.npmjs.com/package/@google/g
 
 1. **Install Gemini CLI** (if you haven't already):
 
-    ```bash
-    npm install -g @google/gemini-cli@latest
-    ```
+   ```bash
+   npm install -g @google/gemini-cli@latest
+   ```
 
 2. **Configure the MCP Server**:
-    You can register the server by creating or editing your Gemini settings file, typically located at `~/.gemini/settings.json` (Global) or `.gemini/settings.json` (Project-local).
+   You can register the server by creating or editing your Gemini settings file, typically located at `~/.gemini/settings.json` (Global) or `.gemini/settings.json` (Project-local).
 
-    Add the following configuration:
+   Add the following configuration:
 
-    ```json
-    {
-      "mcpServers": {
-        "toon": {
-          "command": "npx",
-          "args": ["-y", "git+https://github.com/kweinmeister/toon-mcp.git"]
-        }
-      }
-    }
-    ```
+   ```json
+   {
+     "mcpServers": {
+       "toon": {
+         "command": "npx",
+         "args": ["-y", "git+https://github.com/kweinmeister/toon-mcp.git"]
+       }
+     }
+   }
+   ```
 
 3. **Run Gemini CLI**:
-    Start the CLI interface. The tools should now be available to the model.
+   Start the CLI interface. The tools should now be available to the model.
 
-    ```bash
-    gemini
-    ```
+   ```bash
+   gemini
+   ```
 
 ## Tools
 
@@ -56,16 +56,17 @@ Converts JSON data into the compact TOON format.
 
 **Parameters:**
 
-| Parameter | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `json` | `string` | **Required** | The JSON data (serialized as a string) to encode. |
-| `indent` | `number` | `2` | Number of spaces for indentation. |
-| `delimiter` | `string` | `,` | Delimiter for arrays/rows. Options: `,` (comma), `\t` (tab), `\|` (pipe). |
-| `keyFolding` | `string` | `"off"` | Collapse single-key wrapper chains (e.g., `a.b.c`). Options: `"off"`, `"safe"`. |
-| `flattenDepth` | `number` | `Infinity` | Maximum depth to apply key folding. |
-| `replacer` | `(string\|number)[]` | `undefined` | Array of properties to include in the output. |
+| Parameter      | Type                 | Default      | Description                                                                     |
+| :------------- | :------------------- | :----------- | :------------------------------------------------------------------------------ |
+| `json`         | `string`             | **Required** | The JSON data (serialized as a string) to encode.                               |
+| `indent`       | `number`             | `2`          | Number of spaces for indentation.                                               |
+| `delimiter`    | `string`             | `,`          | Delimiter for arrays/rows. Options: `,` (comma), `\t` (tab), `\|` (pipe).       |
+| `keyFolding`   | `string`             | `"off"`      | Collapse single-key wrapper chains (e.g., `a.b.c`). Options: `"off"`, `"safe"`. |
+| `flattenDepth` | `number`             | `Infinity`   | Maximum depth to apply key folding.                                             |
+| `replacer`     | `(string\|number)[]` | `undefined`  | Array of properties to include in the output.                                   |
 
 **Example Prompt in Gemini CLI:**
+
 > "Use the encode_toon tool to convert this JSON into TOON format: `{"users": [{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]}`"
 
 **Output:**
@@ -82,12 +83,12 @@ Parses TOON formatted text back into standard JSON.
 
 **Parameters:**
 
-| Parameter | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `toon` | `string` | **Required** | The TOON formatted string to decode. |
-| `strict` | `boolean` | `true` | Enforce strict validation (e.g., checking declared array lengths). |
-| `expandPaths` | `string` | `"off"` | Reconstruct dotted keys into nested objects. Options: `"off"`, `"safe"`. |
-| `indent` | `number` | `2` | Number of spaces for indentation. |
+| Parameter     | Type      | Default      | Description                                                              |
+| :------------ | :-------- | :----------- | :----------------------------------------------------------------------- |
+| `toon`        | `string`  | **Required** | The TOON formatted string to decode.                                     |
+| `strict`      | `boolean` | `true`       | Enforce strict validation (e.g., checking declared array lengths).       |
+| `expandPaths` | `string`  | `"off"`      | Reconstruct dotted keys into nested objects. Options: `"off"`, `"safe"`. |
+| `indent`      | `number`  | `2`          | Number of spaces for indentation.                                        |
 
 ## Transports
 
